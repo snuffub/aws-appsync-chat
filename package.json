@@ -10,6 +10,7 @@
     "glamor": "^2.20.40",
     "graphql-tag": "^2.10.3",
     "lodash": "^4.17.15",
+    "lodash.flowright": "^3.5.0",
     "mobx": "^5.15.4",
     "mobx-react": "^6.1.8",
     "react": "^16.6.3",
