@@ -16,9 +16,9 @@
     #set( $ownerAuthExpressions = [] )
     #set( $ownerAuthExpressionValues = {} )
     #set( $ownerAuthExpressionNames = {} )
-    ## Authorization rule: { allow: owner, ownerField: "authorId", identityClaim: "cognito:username" } **
-    $util.qr($ownerAuthExpressions.add("#owner0 = :identity0"))
-    $util.qr($ownerAuthExpressionNames.put("#owner0", "authorId"))
+    ## Authorization rule: { allow: owner, ownerField: "members", identityClaim: "cognito:username" } **
+    $util.qr($ownerAuthExpressions.add("contains(#owner0, :identity0)"))
+    $util.qr($ownerAuthExpressionNames.put("#owner0", "members"))
     $util.qr($ownerAuthExpressionValues.put(":identity0", $util.dynamodb.toDynamoDB($util.defaultIfNull($ctx.identity.claims.get("username"), $util.defaultIfNull($ctx.identity.claims.get("cognito:username"), "___xamznone____")))))
     ## [End] Owner Authorization Checks **
 

@@ -40,6 +40,7 @@ class Conversation extends React.Component {
       messageConversationId: conversationId,
       content: this.state.message,
       authorId: username,
+      members: this.props.data.getConvo.members,
     };
     this.props.createMessage(message);
     this.setState({ message: "" });

@@ -153,6 +153,7 @@ export const createMessage = `mutation CreateMessage($input: CreateMessageInput!
       updatedAt
     }
     messageConversationId
+    members
     createdAt
     updatedAt
   }
@@ -189,6 +190,7 @@ export const updateMessage = `mutation UpdateMessage($input: UpdateMessageInput!
       updatedAt
     }
     messageConversationId
+    members
     createdAt
     updatedAt
   }
@@ -225,6 +227,7 @@ export const deleteMessage = `mutation DeleteMessage($input: DeleteMessageInput!
       updatedAt
     }
     messageConversationId
+    members
     createdAt
     updatedAt
   }
