@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "aws-amplify": "^2.2.6",
-    "aws-amplify-react": "^3.1.7",
+    "aws-amplify": "^3.0.7",
+    "aws-amplify-react": "^4.1.6",
     "aws-appsync": "^3.0.2",
     "aws-appsync-react": "^3.0.2",
     "glamor": "^2.20.40",
@@ -13,11 +13,11 @@
     "lodash.flowright": "^3.5.0",
     "mobx": "^5.15.4",
     "mobx-react": "^6.1.8",
-    "react": "^16.6.3",
+    "react": "^16.13.1",
     "react-apollo": "^2.5.8",
-    "react-dom": "^16.6.3",
+    "react-dom": "^16.13.1",
     "react-icons": "^3.9.0",
-    "react-router-dom": "^4.3.1",
+    "react-router-dom": "^5.1.2",
     "react-scripts": "2.1.1"
   },
   "scripts": {
