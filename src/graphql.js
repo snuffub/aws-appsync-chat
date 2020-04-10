@@ -28,6 +28,7 @@ const createMessage = gql`
         content: $content
         messageConversationId: $messageConversationId
         authorId: $authorId
+        members: $members
       }
     ) {
       id
