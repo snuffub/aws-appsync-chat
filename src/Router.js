@@ -1,36 +1,40 @@
-import React from 'react'
-import { BrowserRouter } from "react-router-dom"
-import { Hub } from 'aws-amplify'
-import { withAuthenticator } from 'aws-amplify-react'
+import React from "react";
+import { BrowserRouter } from "react-router-dom";
+import { Hub } from "aws-amplify";
+import { withAuthenticator } from "aws-amplify-react";
 
-import UserStore from './mobx/UserStore'
-import Header from './components/Header'
-import Routes from './Routes'
-import { primary } from './theme'
+import UserStore from "./mobx/UserStore";
+import Header from "./components/Header";
+import Routes from "./Routes";
+import { primary } from "./theme";
 
 class Router extends React.Component {
   state = {
-    view: 'convos'
-  }
+    view: "convos",
+  };
+
   componentDidMount() {
-    UserStore.init()
-    Hub.listen('auth', this);
+    UserStore.init();
+    Hub.listen("auth", (data) => {
+      const { payload } = data;
+      this.onAuthEvent(payload);
+      console.log(
+        "A new auth event has happened: ",
+        data.payload.data.username + " has " + data.payload.event
+      );
+    });
   }
-  onHubCapsule = (data) => {
-    const { channel } = data;
-    if (channel === 'auth') {
-      this.props.onStateChange()
-    }
+  onAuthEvent(payload) {
+    this.props.onStateChange();
   }
+
   toggleDisplay = (view) => {
     this.setState(() => ({
-      view
-    }))
-  }
+      view,
+    }));
+  };
   render() {
-    return (
-      <Routes />
-    )
+    return <Routes />;
   }
 }
 
@@ -38,15 +42,15 @@ const routeConfig = {
   theme: {
     button: {
       backgroundColor: primary,
-      color: 'black'
+      color: "black",
     },
     a: {
-      color: 'black'
-    }
-  }
-}
+      color: "black",
+    },
+  },
+};
 
-const RouterWithAuth = withAuthenticator(Router, routeConfig)
+const RouterWithAuth = withAuthenticator(Router, routeConfig);
 
 const AppRouter = () => {
   return (
@@ -56,7 +60,7 @@ const AppRouter = () => {
         <RouterWithAuth />
       </div>
     </BrowserRouter>
-  )
-}
+  );
+};
 
-export default AppRouter
+export default AppRouter;
