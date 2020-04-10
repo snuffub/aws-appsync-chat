@@ -1,0 +1,15 @@
+{
+    "AppSyncApiName": "allamplifychatt",
+    "AuthCognitoUserPoolId": {
+        "Fn::GetAtt": [
+            "authauth",
+            "Outputs.UserPoolId"
+        ]
+    },
+    "schemaGraphql": "s3://chatt-20190127125226-deployment/amplify-appsync-files/schema.graphql.1548622472981",
+    "ResolverBucket": "chatt-20190127125226-deployment",
+    "ResolverRootKey": "amplify-appsync-files",
+    "DeploymentTimestamp": "1548622472981",
+    "S3DeploymentBucket": "amplify-chatt-devy-212406-deployment",
+    "S3DeploymentRootKey": "amplify-appsync-files/71ba061b4d910c360d8b5e294d4f6e8e4953b2fa"
+}
