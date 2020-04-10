@@ -1,5 +1,5 @@
-import graphql from "graphql-tag";
-import gql from "graphql-tag";
+import graphql from 'graphql-tag'
+import gql from 'graphql-tag';
 
 // mutations
 const createUser = `
@@ -10,36 +10,23 @@ const createUser = `
       id username createdAt
     }
   }
+`
+
+const createMessage = gql`mutation CreateMessage(
+    $createdAt: String, $id: ID, $authorId: String, $content: String!, $messageConversationId: ID!
+  ) {
+  createMessage(input: {
+    createdAt: $createdAt, id: $id, content: $content, messageConversationId: $messageConversationId, authorId: $authorId
+  }) {
+    id
+    content
+    authorId
+    messageConversationId
+    createdAt
+  }
+}
 `;
 
-const createMessage = gql`
-  mutation CreateMessage(
-    $createdAt: String
-    $id: ID
-    $authorId: String
-    $members: [String!]!
-    $content: String!
-    $messageConversationId: ID!
-  ) {
-    createMessage(
-      input: {
-        createdAt: $createdAt
-        id: $id
-        content: $content
-        messageConversationId: $messageConversationId
-        authorId: $authorId
-        members: $members
-      }
-    ) {
-      id
-      content
-      authorId
-      members
-      messageConversationId
-      createdAt
-    }
-  }
-`;
 
 const createConvo = `mutation CreateConvo($name: String!, $members: [String!]!) {
   createConvo(input: {
@@ -76,11 +63,11 @@ const getUser = graphql`
       username
     }
   }
-`;
+`
 
 const getUserAndConversations = gql`
-  query getUserAndConversations($id: ID!) {
-    getUser(id: $id) {
+  query getUserAndConversations($id:ID!) {
+    getUser(id:$id) {
       id
       username
       conversations(limit: 100) {
@@ -94,11 +81,11 @@ const getUserAndConversations = gql`
       }
     }
   }
-`;
+`
 
 const getConvo = gql`
   query getConvo($id: ID!) {
-    getConvo(id: $id) {
+    getConvo(id:$id) {
       id
       name
       members
@@ -115,7 +102,7 @@ const getConvo = gql`
       updatedAt
     }
   }
-`;
+`
 
 const listUsers = graphql`
   query listUsers {
@@ -127,7 +114,7 @@ const listUsers = graphql`
       }
     }
   }
-`;
+`
 
 const onCreateMessage = gql`
   subscription onCreateMessage($messageConversationId: ID!) {
@@ -139,16 +126,15 @@ const onCreateMessage = gql`
       createdAt
     }
   }
-`;
+`
 
-const onCreateUser = gql`
-  subscription OnCreateUser {
-    onCreateUser {
-      id
-      username
-      createdAt
-    }
+const onCreateUser = gql`subscription OnCreateUser {
+  onCreateUser {
+    id
+    username
+    createdAt
   }
+}
 `;
 
 export {
@@ -161,5 +147,5 @@ export {
   getUserAndConversations,
   listUsers,
   onCreateMessage,
-  onCreateUser,
-};
+  onCreateUser
+}

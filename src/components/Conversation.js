@@ -40,7 +40,6 @@ class Conversation extends React.Component {
       messageConversationId: conversationId,
       content: this.state.message,
       authorId: username,
-      members: this.props.data.getConvo.members,
     };
     this.props.createMessage(message);
     this.setState({ message: "" });
@@ -51,6 +50,7 @@ class Conversation extends React.Component {
     const { username } = UserStore;
     let { messages } = this.props;
     messages = messages.sort((a, b) => a.createdAt - b.createdAt);
+
     return (
       <div>
         <div {...css(styles.conversationNameContainer)}>

@@ -1,9 +1,6 @@
 {
-    "providers": [
-        "awscloudformation"
-    ],
-    "projectName": "aws-appsync-chat",
-    "version": "3.0",
+    "projectName": "chatt",
+    "version": "1.0",
     "frontend": "javascript",
     "javascript": {
         "framework": "react",
@@ -13,5 +10,8 @@
             "BuildCommand": "npm run-script build",
             "StartCommand": "npm run-script start"
         }
-    }
+    },
+    "providers": [
+        "awscloudformation"
+    ]
 }
