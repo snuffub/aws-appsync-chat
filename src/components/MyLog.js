@@ -18,6 +18,7 @@ class MyLog extends React.Component {
     message: ""
   };
   componentDidMount() {
+    this.scrollToBottom();
     this.props.subscribeToNewMessages();
   }
   scrollToBottom = () => {

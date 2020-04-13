@@ -12,6 +12,9 @@ class Footer extends React.Component {
         <Link to="/" {...css(styles.button)}>
           <p {...css(styles.buttonText)}>Me</p>
         </Link>
+        <Link to="/users" {...css(styles.button)}>
+          <p {...css(styles.buttonText)}>Supporters</p>
+        </Link>
         <Link to="/profile" {...css(styles.button)}>
           <p {...css(styles.buttonText)}>Profile</p>
         </Link>

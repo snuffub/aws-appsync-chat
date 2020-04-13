@@ -3,47 +3,41 @@ import { graphql } from "react-apollo";
 
 import flowright from "lodash.flowright";
 import { css } from "glamor";
-import { FaUser, FaPlus } from "react-icons/fa";
+import { FaUser, FaChevronRight } from "react-icons/fa";
 import { observer } from "mobx-react";
+import { Link } from "react-router-dom";
 
 import { primary } from "../theme";
 import { listUsers, onCreateUser as OnCreateUser } from "../graphql";
-import Overlay from "./Overlay";
 import UserStore from "../mobx/UserStore";
 
 class Users extends React.Component {
-  state = { showOverlay: false, userForConvo: {} };
-  toggleOverlay = (visible, userForConvo) => {
-    this.setState({ showOverlay: visible, userForConvo });
-  };
+  state = { userForConvo: {} };
   componentDidMount() {
     this.props.subscribeToNewMessages();
   }
   render() {
     const { username } = UserStore;
-    const users = this.props.users.filter((u) => u.username !== username);
+    const users = this.props.users.filter(u => u.username !== username);
     return (
       <div {...css(styles.container)}>
-        {this.state.showOverlay && (
-          <Overlay
-            user={this.state.userForConvo}
-            toggleOverlay={this.toggleOverlay}
-            username={username}
-            history={this.props.history}
-          />
-        )}
-        <p {...css(styles.title)}>Users</p>
+        <p {...css(styles.title)}>Supporters</p>
         {users.map((u, i) => (
-          <div
+          <Link
+            to={`conversation/${
+              u.conversations.items[0]
+                ? u.conversations.items[0].conversation.id
+                : ""
+            }/${u.username + "'s Activity"}`}
+            {...css(styles.link)}
             key={i}
-            {...css(styles.user)}
-            onClick={() => this.toggleOverlay(true, u)}>
+            {...css(styles.user)}>
             <FaUser />
             <p {...css(styles.username)}>{u.username}</p>
             <div {...css(styles.plusIconContainer)}>
-              <FaPlus />
+              <FaChevronRight />
             </div>
-          </div>
+          </Link>
         ))}
       </div>
     );
@@ -51,14 +45,18 @@ class Users extends React.Component {
 }
 
 const styles = {
+  link: {
+    textDecoration: "none",
+    color: "black"
+  },
   plusIconContainer: {
     display: "flex",
     flex: 1,
-    justifyContent: "flex-end",
+    justifyContent: "flex-end"
   },
   username: {
     margin: 0,
-    marginLeft: 10,
+    marginLeft: 10
   },
   user: {
     display: "flex",
@@ -66,26 +64,26 @@ const styles = {
     backgroundColor: "#ededed",
     borderRadius: 20,
     marginTop: 10,
-    cursor: "pointer",
+    cursor: "pointer"
   },
   container: {
-    padding: 10,
+    padding: 10
   },
   title: {
     fontSize: 20,
     fontWeight: 500,
     margin: 0,
     borderBottom: `2px solid ${primary}`,
-    paddingBottom: 4,
-  },
+    paddingBottom: 4
+  }
 };
 
 const UsersWithData = flowright(
   graphql(listUsers, {
     options: {
-      fetchPolicy: "cache-and-network",
+      fetchPolicy: "cache-and-network"
     },
-    props: (props) => {
+    props: props => {
       return {
         users: props.data.listUsers ? props.data.listUsers.items : [],
         subscribeToNewMessages: () => {
@@ -95,12 +93,12 @@ const UsersWithData = flowright(
               prev,
               {
                 subscriptionData: {
-                  data: { onCreateUser },
-                },
+                  data: { onCreateUser }
+                }
               }
             ) => {
               let userArray = prev.listUsers.items.filter(
-                (u) => u.id !== onCreateUser.id
+                u => u.id !== onCreateUser.id
               );
               userArray = [...userArray, onCreateUser];
               console.log("userArray:", userArray);
@@ -109,14 +107,14 @@ const UsersWithData = flowright(
                 ...prev,
                 listUsers: {
                   ...prev.listUsers,
-                  items: userArray,
-                },
+                  items: userArray
+                }
               };
-            },
+            }
           });
-        },
+        }
       };
-    },
+    }
   })
 )(Users);
 

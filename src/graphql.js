@@ -124,6 +124,14 @@ const listUsers = graphql`
         id
         username
         createdAt
+        conversations(limit: 100) {
+          items {
+            id
+            conversation {
+              id
+            }
+          }
+        }
       }
     }
   }
@@ -162,5 +170,5 @@ export {
   getUserAndConversations,
   listUsers,
   onCreateMessage,
-  onCreateUser,
+  onCreateUser
 };
