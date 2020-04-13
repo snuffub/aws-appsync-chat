@@ -1,38 +1,34 @@
-import React from 'react'
-import { css } from 'glamor'
+import React from "react";
+import { css } from "glamor";
 
-import { primary } from '../theme'
+import { primary } from "../theme";
 
-const chatLogo = require('../assets/chattlogo.png')
+const doxonLogo = require("../assets/doxonLogo.png");
 
 const Loading = () => (
   <div {...css(styles.container)}>
     <div {...css(styles.logoWrapper)}>
-      <img
-        alt='Logo'
-        {...css(styles.logo)}
-        src={chatLogo}
-      />
+      <img alt="Logo" {...css(styles.logo)} src={doxonLogo} />
     </div>
   </div>
-)
+);
 
 const styles = {
   container: {
-    height: '100vh',  
+    height: "100vh",
     backgroundColor: primary
   },
   logoWrapper: {
-    display: 'flex',
+    display: "flex",
     flex: 1,
-    height: '100%',
-    justifyContent: 'center',
-    alignItems: 'center'
+    height: "100%",
+    justifyContent: "center",
+    alignItems: "center"
   },
   logo: {
     height: 60,
     width: 255
   }
-}
+};
 
-export default Loading
+export default Loading;
