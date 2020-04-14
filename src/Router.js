@@ -10,11 +10,11 @@ import { primary } from "./theme";
 
 class Router extends React.Component {
   state = {
-    view: "convos",
+    view: "convos"
   };
   componentDidMount() {
     UserStore.init();
-    Hub.listen("auth", (data) => {
+    Hub.listen("auth", data => {
       const { payload } = data;
       this.onAuthEvent(payload);
       console.log(
@@ -26,9 +26,9 @@ class Router extends React.Component {
   onAuthEvent(payload) {
     this.props.onStateChange();
   }
-  toggleDisplay = (view) => {
+  toggleDisplay = view => {
     this.setState(() => ({
-      view,
+      view
     }));
   };
   render() {
@@ -40,12 +40,12 @@ const routeConfig = {
   theme: {
     button: {
       backgroundColor: primary,
-      color: "black",
+      color: "black"
     },
     a: {
-      color: "black",
-    },
-  },
+      color: "black"
+    }
+  }
 };
 
 const RouterWithAuth = withAuthenticator(Router, routeConfig);

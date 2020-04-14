@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
-import { css } from 'glamor'
+import React, { Component } from "react";
+import { css } from "glamor";
 
-import Router from './Router'
+import Router from "./Router";
 
 class App extends Component {
   render() {
@@ -15,8 +15,8 @@ class App extends Component {
 
 const styles = {
   container: {
-    padding: '55px 0px 50px'
+    padding: "55px 0px 50px"
   }
-}
+};
 
-export default App
+export default App;

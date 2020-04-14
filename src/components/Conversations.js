@@ -16,9 +16,9 @@ const ConversationsObserver = observer(
       const { username } = UserStore;
       let { conversations } = this.props;
 
-      conversations = conversations.map((c) => {
+      conversations = conversations.map(c => {
         const convo = c.conversation.name.split("&");
-        const name = convo.find((i) => i !== username);
+        const name = convo.find(i => i !== username);
         return { ...c, name };
       });
       return (
@@ -49,52 +49,52 @@ const ConversationsWithData = flowright(
     options: () => {
       return {
         variables: {
-          id: UserStore.username,
+          id: UserStore.username
         },
-        fetchPolicy: "cache-and-network",
+        fetchPolicy: "cache-and-network"
       };
     },
-    props: (props) => {
+    props: props => {
       return {
         conversations: props.data.getUser
           ? props.data.getUser.conversations.items
-          : [],
+          : []
       };
-    },
+    }
   })
 )(ConversationsObserver);
 
 const styles = {
   link: {
     textDecoration: "none",
-    color: "black",
+    color: "black"
   },
   container: {
-    padding: 10,
+    padding: 10
   },
   conversation: {
     marginTop: 10,
     backgroundColor: lightBg,
     padding: "12px 15px",
     borderRadius: 20,
-    display: "flex",
+    display: "flex"
   },
   conversationTitle: {
     margin: 0,
-    marginLeft: 12,
+    marginLeft: 12
   },
   chevronContainer: {
     flex: 1,
     display: "flex",
-    justifyContent: "flex-end",
+    justifyContent: "flex-end"
   },
   title: {
     fontSize: 20,
     fontWeight: 500,
     margin: 0,
     borderBottom: `2px solid ${primary}`,
-    paddingBottom: 4,
-  },
+    paddingBottom: 4
+  }
 };
 
 export default observer(ConversationsWithData);
