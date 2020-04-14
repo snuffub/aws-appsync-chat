@@ -1,6 +1,6 @@
 {
     "CreateAPIKey": 0,
-    "AppSyncApiName": "allamplifychatt",
+    "AppSyncApiName": "allamplifydoxon",
     "AuthCognitoUserPoolId": {
         "Fn::GetAtt": [
             "authauth",
@@ -8,5 +8,5 @@
         ]
     },
     "S3DeploymentBucket": "amplify-chatt-devy-212406-deployment",
-    "S3DeploymentRootKey": "amplify-appsync-files/113502ecca07f40220be870f2b6005f798afc8ff"
+    "S3DeploymentRootKey": "amplify-appsync-files/002dcb243efbf4299ea8b71bbbca5a18666450c7"
 }
