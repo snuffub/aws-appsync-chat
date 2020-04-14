@@ -6,7 +6,7 @@
     }
   },
   "api": {
-    "allamplifydoxon": {
+    "allamplifychatt": {
       "service": "AppSync",
       "providerPlugin": "awscloudformation",
       "output": {
