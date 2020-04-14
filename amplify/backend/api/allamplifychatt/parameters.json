@@ -1,5 +1,5 @@
 {
-    "AppSyncApiName": "allamplifydoxon",
+    "AppSyncApiName": "allamplifychatt",
     "AuthCognitoUserPoolId": {
         "Fn::GetAtt": [
             "authauth",
