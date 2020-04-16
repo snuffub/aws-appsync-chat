@@ -18,12 +18,8 @@ class Conversation extends React.Component {
     message: ""
   };
   componentDidMount() {
-    this.scrollToBottom();
     this.props.subscribeToNewMessages();
   }
-  scrollToBottom = () => {
-    this.div.scrollIntoView({ behavior: "smooth" });
-  };
   onChange = e => {
     this.setState({ [e.target.name]: e.target.value });
   };
@@ -50,7 +46,7 @@ class Conversation extends React.Component {
     const { conversationName } = this.props.match.params;
     const { username } = UserStore;
     let { messages } = this.props;
-    messages = messages.sort((a, b) => a.createdAt - b.createdAt);
+    messages = messages.sort((a, b) => b.createdAt - a.createdAt);
 
     return (
       <div>

@@ -3,6 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@date-io/moment": "1.x",
+    "@material-ui/core": "^4.9.10",
+    "@material-ui/icons": "^4.9.1",
+    "@material-ui/pickers": "^3.2.10",
     "aws-amplify": "^3.0.7",
     "aws-amplify-react": "^4.1.6",
     "aws-appsync": "^3.0.2",
@@ -13,6 +17,7 @@
     "lodash.flowright": "^3.5.0",
     "mobx": "^5.15.4",
     "mobx-react": "^6.1.8",
+    "moment": "^2.24.0",
     "react": "^16.13.1",
     "react-apollo": "^2.5.8",
     "react-dom": "^16.13.1",

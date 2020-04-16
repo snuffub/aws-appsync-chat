@@ -6,6 +6,16 @@ import { observer } from "mobx-react";
 import { css } from "glamor";
 import uuid from "uuid/v4";
 
+import Button from "@material-ui/core/Button";
+import ButtonGroup from "@material-ui/core/ButtonGroup";
+import KitchenOutlinedIcon from "@material-ui/icons/KitchenOutlined";
+import LocalHospitalIcon from "@material-ui/icons/LocalHospital";
+import FitnessCenterIcon from "@material-ui/icons/FitnessCenter";
+
+import ExerciseModal from "./AddExerciseDialog.js";
+import FoodModal from "./AddFoodDialog.js";
+import HealthModal from "./AddHealthDialog.js";
+
 import UserStore from "../mobx/UserStore";
 import {
   getConvo,
@@ -15,47 +25,81 @@ import {
 
 class MyLog extends React.Component {
   state = {
-    message: ""
+    messageContent: "",
+    openExerciseModal: false,
+    openFoodModal: false,
+    openHealthModal: false
   };
+
+  handleOpenModal = modalStateName => {
+    this.setState({ [modalStateName]: true });
+  };
+
+  handleCloseModal = modalStateName => {
+    this.setState({ [modalStateName]: false });
+  };
+  handleSaveModal = (values, modalStateName) => {
+    this.handleCloseModal(modalStateName);
+    this.createMessage(values);
+  };
+
   componentDidMount() {
-    this.scrollToBottom();
     this.props.subscribeToNewMessages();
   }
-  scrollToBottom = () => {
-    this.div.scrollIntoView({ behavior: "smooth" });
-  };
-  onChange = e => {
-    this.setState({ [e.target.name]: e.target.value });
-  };
-  createMessage = e => {
-    if (e.key !== "Enter") {
-      return;
-    }
-    if (this.state.message === "") return;
+
+  createMessage = values => {
+    const contents = JSON.stringify(values);
     const { username } = UserStore;
     const { myActivityId } = UserStore;
     const message = {
       id: uuid(),
       createdAt: Date.now(),
       messageConversationId: myActivityId,
-      content: this.state.message,
+      content: contents,
       authorId: username,
       members: username
     };
     this.props.createMessage(message);
-    this.setState({ message: "" });
   };
 
   render() {
-    const { conversationName } = this.props.match.params;
     const { username } = UserStore;
     let { messages } = this.props;
-    messages = messages.sort((a, b) => a.createdAt - b.createdAt);
+    messages = messages.sort((a, b) => b.createdAt - a.createdAt);
 
     return (
-      <div>
+      <div {...css(styles.container)}>
         <div {...css(styles.conversationNameContainer)}>
-          <p {...css(styles.conversationName)}>{conversationName}</p>
+          <ButtonGroup
+            {...css(styles.buttonGroup)}
+            size="small"
+            aria-label="small outlined button group">
+            <Button
+              onClick={() => this.handleOpenModal("openExerciseModal")}
+              {...css(styles.button)}
+              color="primary"
+              aria-label="add exercise"
+              startIcon={<FitnessCenterIcon />}>
+              {" "}
+              Exercise
+            </Button>
+            <Button
+              onClick={() => this.handleOpenModal("openFoodModal")}
+              {...css(styles.button)}
+              color="primary"
+              aria-label="add Food"
+              startIcon={<KitchenOutlinedIcon />}>
+              Food
+            </Button>
+            <Button
+              onClick={() => this.handleOpenModal("openHealthModal")}
+              {...css(styles.button)}
+              color="primary"
+              aria-label="add health data"
+              startIcon={<LocalHospitalIcon />}>
+              Health
+            </Button>
+          </ButtonGroup>
         </div>
         <div {...css(styles.messagesContainer)}>
           {messages.map((m, i) => {
@@ -78,16 +122,24 @@ class MyLog extends React.Component {
           })}
           <div ref={val => (this.div = val)} {...css(styles.scroller)} />
         </div>
-        <div {...css(styles.inputContainer)}>
-          <input
-            {...css(styles.input)}
-            placeholder="Message"
-            name="message"
-            onChange={this.onChange}
-            onKeyPress={this.createMessage}
-            value={this.state.message}
-          />
-        </div>
+        <ExerciseModal
+          {...this.state}
+          onCloseModal={this.handleCloseModal}
+          onSaveModal={this.handleSaveModal}
+          modalStateName="openExerciseModal"
+        />
+        <FoodModal
+          {...this.state}
+          onCloseModal={this.handleCloseModal}
+          onSaveModal={this.handleSaveModal}
+          modalStateName="openFoodModal"
+        />
+        <HealthModal
+          {...this.state}
+          onCloseModal={this.handleCloseModal}
+          onSaveModal={this.handleSaveModal}
+          modalStateName="openHealthModal"
+        />
       </div>
     );
   }
@@ -116,8 +168,25 @@ const styles = {
   conversationNameContainer: {
     backgroundColor: "#fafafa",
     padding: 20,
-    borderBottom: "1px solid #ddd"
+    borderBottom: "1px solid #ddd",
+    display: "flex"
   },
+  buttonGroup: {
+    width: "100%",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    textDecoration: "none",
+    color: "black"
+  },
+  button: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    textDecoration: "none",
+    color: "black"
+  },
+
   conversationName: {
     margin: 0,
     fontSize: 16,
@@ -135,26 +204,14 @@ const styles = {
     backgroundColor: "#ededed",
     borderRadius: 10,
     margin: 10,
-    padding: 20
+    padding: 20,
+    overflowWrap: "break-word"
   },
   messageText: {
     margin: 0
   },
-  input: {
-    height: 45,
-    outline: "none",
-    border: "2px solid #ededed",
-    margin: 5,
-    borderRadius: 30,
-    padding: "0px 20px",
-    fontSize: 18,
-    width: "calc(100% - 54px)"
-  },
-  inputContainer: {
-    width: "100%",
-    position: "absolute",
-    bottom: 50,
-    left: 0
+  container: {
+    padding: 10
   }
 };
 
