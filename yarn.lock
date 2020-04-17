@@ -2448,6 +2448,11 @@
     "@babel/runtime" "^7.5.5"
     redux-persist "^4.6.0"
 
+"@sandstreamdev/react-swipeable-list@^0.5.0":
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/@sandstreamdev/react-swipeable-list/-/react-swipeable-list-0.5.0.tgz#3cdd407e95a0f829cedcc23047716b580e1288fe"
+  integrity sha512-tbbQoM+M3Z7s751PI/wK2lwfKKQCPinPIwJkkSWnf3oLPi+3EaU874FMDmMHKFBy1whDFdfamZZJWxJqfrOdFA==
+
 "@sinonjs/commons@^1", "@sinonjs/commons@^1.3.0", "@sinonjs/commons@^1.4.0", "@sinonjs/commons@^1.7.0":
   version "1.7.2"
   resolved "https://registry.yarnpkg.com/@sinonjs/commons/-/commons-1.7.2.tgz#505f55c74e0272b43f6c52d81946bed7058fc0e2"

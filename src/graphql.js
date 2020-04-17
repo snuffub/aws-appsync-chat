@@ -41,6 +41,14 @@ const createMessage = gql`
   }
 `;
 
+const deleteMessage = gql`
+  mutation DeleteMessage($input: DeleteMessageInput!) {
+    deleteMessage(input: $input) {
+      id
+    }
+  }
+`;
+
 const createConvo = `mutation CreateConvo($name: String!, $members: [String!]!) {
   createConvo(input: {
     name: $name, members: $members
@@ -149,6 +157,13 @@ const onCreateMessage = gql`
     }
   }
 `;
+const onDeleteMessage = gql`
+  subscription onDeleteMessage($messageConversationId: ID!) {
+    onDeleteMessage(messageConversationId: $messageConversationId) {
+      id
+    }
+  }
+`;
 
 const onCreateUser = gql`
   subscription OnCreateUser {
@@ -163,6 +178,7 @@ const onCreateUser = gql`
 export {
   createUser,
   createMessage,
+  deleteMessage,
   createConvo,
   createConvoLink,
   getConvo,
@@ -170,5 +186,6 @@ export {
   getUserAndConversations,
   listUsers,
   onCreateMessage,
-  onCreateUser
+  onDeleteMessage,
+  onCreateUser,
 };

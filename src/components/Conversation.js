@@ -10,20 +10,23 @@ import UserStore from "../mobx/UserStore";
 import {
   getConvo,
   createMessage as CreateMessage,
-  onCreateMessage as OnCreateMessage
+  onCreateMessage as OnCreateMessage,
+  deleteMessage as DeleteMessage,
+  onDeleteMessage as OnDeleteMessage,
 } from "../graphql";
 
 class Conversation extends React.Component {
   state = {
-    message: ""
+    message: "",
   };
   componentDidMount() {
     this.props.subscribeToNewMessages();
+    this.props.subscribeToDeleteMessages();
   }
-  onChange = e => {
+  onChange = (e) => {
     this.setState({ [e.target.name]: e.target.value });
   };
-  createMessage = e => {
+  createMessage = (e) => {
     if (e.key !== "Enter") {
       return;
     }
@@ -36,7 +39,7 @@ class Conversation extends React.Component {
       messageConversationId: conversationId,
       content: this.state.message,
       authorId: username,
-      members: this.props.data.getConvo.members
+      members: this.props.data.getConvo.members,
     };
     this.props.createMessage(message);
     this.setState({ message: "" });
@@ -60,19 +63,19 @@ class Conversation extends React.Component {
                 key={i}
                 {...css([
                   styles.message,
-                  checkSenderForMessageStyle(username, m)
+                  checkSenderForMessageStyle(username, m),
                 ])}>
                 <p
                   {...css([
                     styles.messageText,
-                    checkSenderForTextStyle(username, m)
+                    checkSenderForTextStyle(username, m),
                   ])}>
                   {m.content}
                 </p>
               </div>
             );
           })}
-          <div ref={val => (this.div = val)} {...css(styles.scroller)} />
+          <div ref={(val) => (this.div = val)} {...css(styles.scroller)} />
         </div>
       </div>
     );
@@ -83,7 +86,7 @@ function checkSenderForMessageStyle(username, message) {
   if (username === message.authorId) {
     return {
       backgroundColor: "#1b86ff",
-      marginLeft: 50
+      marginLeft: 50,
     };
   } else {
     return { marginRight: 50 };
@@ -93,7 +96,7 @@ function checkSenderForMessageStyle(username, message) {
 function checkSenderForTextStyle(username, message) {
   if (username === message.authorId) {
     return {
-      color: "white"
+      color: "white",
     };
   }
 }
@@ -102,44 +105,44 @@ const styles = {
   conversationNameContainer: {
     backgroundColor: "#fafafa",
     padding: 20,
-    borderBottom: "1px solid #ddd"
+    borderBottom: "1px solid #ddd",
   },
   conversationName: {
     margin: 0,
     fontSize: 16,
-    fontWeight: 500
+    fontWeight: 500,
   },
   scroller: {
     float: "left",
-    clear: "both"
+    clear: "both",
   },
   messagesContainer: {
     height: "calc(100vh - 166px)",
-    overflow: "scroll"
+    overflow: "scroll",
   },
   message: {
     backgroundColor: "#ededed",
     borderRadius: 10,
     margin: 10,
-    padding: 20
+    padding: 20,
   },
   messageText: {
-    margin: 0
-  }
+    margin: 0,
+  },
 };
 
 const ConversationWithData = flowright(
   graphql(getConvo, {
-    options: props => {
+    options: (props) => {
       const { conversationId } = props.match.params;
       return {
         variables: {
-          id: conversationId
+          id: conversationId,
         },
-        fetchPolicy: "cache-and-network"
+        fetchPolicy: "cache-and-network",
       };
     },
-    props: props => {
+    props: (props) => {
       const { conversationId } = props.ownProps.match.params;
       let messages = props.data.getConvo
         ? props.data.getConvo.messages.items
@@ -147,7 +150,7 @@ const ConversationWithData = flowright(
       return {
         messages,
         data: props.data,
-        subscribeToNewMessages: params => {
+        subscribeToNewMessages: (params) => {
           props.data.subscribeToMore({
             document: OnCreateMessage,
             variables: { messageConversationId: conversationId },
@@ -155,12 +158,12 @@ const ConversationWithData = flowright(
               prev,
               {
                 subscriptionData: {
-                  data: { onCreateMessage }
-                }
+                  data: { onCreateMessage },
+                },
               }
             ) => {
               let messageArray = prev.getConvo.messages.items.filter(
-                message => message.id !== onCreateMessage.id
+                (message) => message.id !== onCreateMessage.id
               );
               messageArray = [...messageArray, onCreateMessage];
 
@@ -170,29 +173,57 @@ const ConversationWithData = flowright(
                   ...prev.getConvo,
                   messages: {
                     ...prev.getConvo.messages,
-                    items: messageArray
-                  }
-                }
+                    items: messageArray,
+                  },
+                },
               };
-            }
+            },
           });
-        }
+        },
+        subscribeToDeleteMessages: (params) => {
+          props.data.subscribeToMore({
+            document: OnDeleteMessage,
+            variables: { messageConversationId: conversationId },
+            updateQuery: (
+              prev,
+              {
+                subscriptionData: {
+                  data: { onDeleteMessage },
+                },
+              }
+            ) => {
+              let messageArray = prev.getConvo.messages.items.filter(
+                (message) => message.id !== onDeleteMessage.id
+              );
+              return {
+                ...prev,
+                getConvo: {
+                  ...prev.getConvo,
+                  messages: {
+                    ...prev.getConvo.messages,
+                    items: messageArray,
+                  },
+                },
+              };
+            },
+          });
+        },
       };
-    }
+    },
   }),
   graphql(CreateMessage, {
-    options: props => {
+    options: (props) => {
       const { conversationId } = props.match.params;
       return {
         update: (dataProxy, { data: { createMessage } }) => {
           const query = getConvo;
           const data = dataProxy.readQuery({
             query,
-            variables: { id: conversationId }
+            variables: { id: conversationId },
           });
 
           data.getConvo.messages.items = data.getConvo.messages.items.filter(
-            m => m.id !== createMessage.id
+            (m) => m.id !== createMessage.id
           );
 
           data.getConvo.messages.items.push(createMessage);
@@ -200,21 +231,55 @@ const ConversationWithData = flowright(
           dataProxy.writeQuery({
             query,
             data,
-            variables: { id: conversationId }
+            variables: { id: conversationId },
           });
-        }
+        },
       };
     },
-    props: props => ({
-      createMessage: message => {
+    props: (props) => ({
+      createMessage: (message) => {
         props.mutate({
           variables: message,
           optimisticResponse: {
-            createMessage: { ...message, __typename: "Message" }
-          }
+            createMessage: { ...message, __typename: "Message" },
+          },
         });
-      }
-    })
+      },
+    }),
+  }),
+  graphql(DeleteMessage, {
+    options: (props) => {
+      const { conversationId } = props.match.params;
+      return {
+        update: (dataProxy, { data: { deleteMessage } }) => {
+          const query = getConvo;
+          const data = dataProxy.readQuery({
+            query,
+            variables: { id: conversationId },
+          });
+
+          data.getConvo.messages.items = data.getConvo.messages.items.filter(
+            (m) => m.id !== deleteMessage.id
+          );
+
+          dataProxy.writeQuery({
+            query,
+            data,
+            variables: { id: conversationId },
+          });
+        },
+      };
+    },
+    props: (props) => ({
+      deleteMessage: (input) => {
+        props.mutate({
+          variables: input,
+          optimisticResponse: {
+            deleteMessage: { ...input.input, __typename: "Message" },
+          },
+        });
+      },
+    }),
   })
   // graphqlMutation(createMessage, getConvo, 'Message')
 )(Conversation);

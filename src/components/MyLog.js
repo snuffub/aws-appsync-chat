@@ -11,16 +11,25 @@ import ButtonGroup from "@material-ui/core/ButtonGroup";
 import KitchenOutlinedIcon from "@material-ui/icons/KitchenOutlined";
 import LocalHospitalIcon from "@material-ui/icons/LocalHospital";
 import FitnessCenterIcon from "@material-ui/icons/FitnessCenter";
+import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 
 import ExerciseModal from "./AddExerciseDialog.js";
 import FoodModal from "./AddFoodDialog.js";
 import HealthModal from "./AddHealthDialog.js";
 
+import {
+  SwipeableList,
+  SwipeableListItem,
+} from "@sandstreamdev/react-swipeable-list";
+import "@sandstreamdev/react-swipeable-list/dist/styles.css";
+
 import UserStore from "../mobx/UserStore";
 import {
   getConvo,
   createMessage as CreateMessage,
-  onCreateMessage as OnCreateMessage
+  onCreateMessage as OnCreateMessage,
+  deleteMessage as DeleteMessage,
+  onDeleteMessage as OnDeleteMessage,
 } from "../graphql";
 
 class MyLog extends React.Component {
@@ -28,14 +37,14 @@ class MyLog extends React.Component {
     messageContent: "",
     openExerciseModal: false,
     openFoodModal: false,
-    openHealthModal: false
+    openHealthModal: false,
   };
 
-  handleOpenModal = modalStateName => {
+  handleOpenModal = (modalStateName) => {
     this.setState({ [modalStateName]: true });
   };
 
-  handleCloseModal = modalStateName => {
+  handleCloseModal = (modalStateName) => {
     this.setState({ [modalStateName]: false });
   };
   handleSaveModal = (values, modalStateName) => {
@@ -45,9 +54,10 @@ class MyLog extends React.Component {
 
   componentDidMount() {
     this.props.subscribeToNewMessages();
+    this.props.subscribeToDeleteMessages();
   }
 
-  createMessage = values => {
+  createMessage = (values) => {
     const contents = JSON.stringify(values);
     const { username } = UserStore;
     const { myActivityId } = UserStore;
@@ -57,13 +67,22 @@ class MyLog extends React.Component {
       messageConversationId: myActivityId,
       content: contents,
       authorId: username,
-      members: username
+      members: username,
     };
     this.props.createMessage(message);
   };
 
+  deleteMessage = (id) => {
+    console.log("attempting to Delete: ", id);
+    const input = {
+      input: {
+        id: id,
+      },
+    };
+    this.props.deleteMessage(input);
+  };
+
   render() {
-    const { username } = UserStore;
     let { messages } = this.props;
     messages = messages.sort((a, b) => b.createdAt - a.createdAt);
 
@@ -102,26 +121,26 @@ class MyLog extends React.Component {
           </ButtonGroup>
         </div>
         <div {...css(styles.messagesContainer)}>
-          {messages.map((m, i) => {
-            return (
-              <div
-                key={i}
-                {...css([
-                  styles.message,
-                  checkSenderForMessageStyle(username, m)
-                ])}>
-                <p
-                  {...css([
-                    styles.messageText,
-                    checkSenderForTextStyle(username, m)
-                  ])}>
-                  {m.content}
-                </p>
-              </div>
-            );
-          })}
-          <div ref={val => (this.div = val)} {...css(styles.scroller)} />
+          <SwipeableList>
+            {messages.map((m, i) => {
+              return (
+                <SwipeableListItem
+                  key={i}
+                  swipeRight={{
+                    content: (
+                      <div {...css(styles.swipeDelete)}>
+                        <DeleteOutlineIcon />
+                      </div>
+                    ),
+                    action: () => this.deleteMessage(m.id),
+                  }}>
+                  <div {...css(styles.message)}>{m.content}</div>
+                </SwipeableListItem>
+              );
+            })}
+          </SwipeableList>
         </div>
+        <div ref={(val) => (this.div = val)} {...css(styles.scroller)} />
         <ExerciseModal
           {...this.state}
           onCloseModal={this.handleCloseModal}
@@ -145,31 +164,12 @@ class MyLog extends React.Component {
   }
 }
 
-function checkSenderForMessageStyle(username, message) {
-  if (username === message.authorId) {
-    return {
-      backgroundColor: "#1b86ff",
-      marginLeft: 50
-    };
-  } else {
-    return { marginRight: 50 };
-  }
-}
-
-function checkSenderForTextStyle(username, message) {
-  if (username === message.authorId) {
-    return {
-      color: "white"
-    };
-  }
-}
-
 const styles = {
   conversationNameContainer: {
     backgroundColor: "#fafafa",
     padding: 20,
     borderBottom: "1px solid #ddd",
-    display: "flex"
+    display: "flex",
   },
   buttonGroup: {
     width: "100%",
@@ -177,56 +177,63 @@ const styles = {
     justifyContent: "center",
     alignItems: "center",
     textDecoration: "none",
-    color: "black"
+    color: "black",
   },
   button: {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
     textDecoration: "none",
-    color: "black"
+    color: "black",
   },
 
   conversationName: {
     margin: 0,
     fontSize: 16,
-    fontWeight: 500
+    fontWeight: 500,
   },
   scroller: {
     float: "left",
-    clear: "both"
+    clear: "both",
   },
   messagesContainer: {
-    height: "calc(100vh - 219px)",
-    overflow: "scroll"
+    height: "calc(100vh - 177px)",
+    overflow: "auto",
   },
   message: {
-    backgroundColor: "#ededed",
     borderRadius: 10,
     margin: 10,
     padding: 20,
-    overflowWrap: "break-word"
+    overflowWrap: "break-word",
+    width: "calc(100vw - 100px)",
+  },
+  swipeDelete: {
+    backgroundColor: "Red",
+    color: "white",
+    padding: 20,
+    alignItems: "center",
+    display: "flex",
+    height: "100%",
+    width: "100%",
+    textAlign: "right",
   },
   messageText: {
-    margin: 0
+    margin: 0,
   },
-  container: {
-    padding: 10
-  }
 };
 
 const MyLogWithData = flowright(
   graphql(getConvo, {
-    options: props => {
+    options: (props) => {
       const { myActivityId } = UserStore;
       return {
         variables: {
-          id: myActivityId
+          id: myActivityId,
         },
-        fetchPolicy: "cache-and-network"
+        fetchPolicy: "cache-and-network",
       };
     },
-    props: props => {
+    props: (props) => {
       const { myActivityId } = UserStore;
       let messages = props.data.getConvo
         ? props.data.getConvo.messages.items
@@ -234,7 +241,7 @@ const MyLogWithData = flowright(
       return {
         messages,
         data: props.data,
-        subscribeToNewMessages: params => {
+        subscribeToNewMessages: (params) => {
           props.data.subscribeToMore({
             document: OnCreateMessage,
             variables: { messageConversationId: myActivityId },
@@ -242,12 +249,13 @@ const MyLogWithData = flowright(
               prev,
               {
                 subscriptionData: {
-                  data: { onCreateMessage }
-                }
+                  data: { onCreateMessage },
+                },
               }
             ) => {
+              console.log("create notified Sub");
               let messageArray = prev.getConvo.messages.items.filter(
-                message => message.id !== onCreateMessage.id
+                (message) => message.id !== onCreateMessage.id
               );
               messageArray = [...messageArray, onCreateMessage];
 
@@ -257,29 +265,57 @@ const MyLogWithData = flowright(
                   ...prev.getConvo,
                   messages: {
                     ...prev.getConvo.messages,
-                    items: messageArray
-                  }
-                }
+                    items: messageArray,
+                  },
+                },
               };
-            }
+            },
           });
-        }
+        },
+        subscribeToDeleteMessages: (params) => {
+          props.data.subscribeToMore({
+            document: OnDeleteMessage,
+            variables: { messageConversationId: myActivityId },
+            updateQuery: (
+              prev,
+              {
+                subscriptionData: {
+                  data: { onDeleteMessage },
+                },
+              }
+            ) => {
+              let messageArray = prev.getConvo.messages.items.filter(
+                (message) => message.id !== onDeleteMessage.id
+              );
+              return {
+                ...prev,
+                getConvo: {
+                  ...prev.getConvo,
+                  messages: {
+                    ...prev.getConvo.messages,
+                    items: messageArray,
+                  },
+                },
+              };
+            },
+          });
+        },
       };
-    }
+    },
   }),
   graphql(CreateMessage, {
-    options: props => {
+    options: (props) => {
       const { myActivityId } = UserStore;
       return {
         update: (dataProxy, { data: { createMessage } }) => {
           const query = getConvo;
           const data = dataProxy.readQuery({
             query,
-            variables: { id: myActivityId }
+            variables: { id: myActivityId },
           });
 
           data.getConvo.messages.items = data.getConvo.messages.items.filter(
-            m => m.id !== createMessage.id
+            (m) => m.id !== createMessage.id
           );
 
           data.getConvo.messages.items.push(createMessage);
@@ -287,22 +323,57 @@ const MyLogWithData = flowright(
           dataProxy.writeQuery({
             query,
             data,
-            variables: { id: myActivityId }
+            variables: { id: myActivityId },
           });
-        }
+        },
       };
     },
-    props: props => ({
-      createMessage: message => {
+    props: (props) => ({
+      createMessage: (message) => {
         props.mutate({
           variables: message,
           optimisticResponse: {
-            createMessage: { ...message, __typename: "Message" }
-          }
+            createMessage: { ...message, __typename: "Message" },
+          },
         });
-      }
-    })
+      },
+    }),
+  }),
+  graphql(DeleteMessage, {
+    options: (props) => {
+      const { myActivityId } = UserStore;
+      return {
+        update: (dataProxy, { data: { deleteMessage } }) => {
+          const query = getConvo;
+          const data = dataProxy.readQuery({
+            query,
+            variables: { id: myActivityId },
+          });
+
+          data.getConvo.messages.items = data.getConvo.messages.items.filter(
+            (m) => m.id !== deleteMessage.id
+          );
+
+          dataProxy.writeQuery({
+            query,
+            data,
+            variables: { id: myActivityId },
+          });
+        },
+      };
+    },
+    props: (props) => ({
+      deleteMessage: (input) => {
+        props.mutate({
+          variables: input,
+          optimisticResponse: {
+            deleteMessage: { ...input.input, __typename: "Message" },
+          },
+        });
+      },
+    }),
   })
+
   // graphqlMutation(createMessage, getConvo, 'Message')
 )(MyLog);
 
