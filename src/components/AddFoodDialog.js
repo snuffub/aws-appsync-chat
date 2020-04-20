@@ -6,7 +6,7 @@ import {
   DialogActions,
   DialogContent,
   DialogContentText,
-  DialogTitle
+  DialogTitle,
 } from "@material-ui/core";
 
 import TextField from "@material-ui/core/TextField";
@@ -28,13 +28,13 @@ const FoodModal = ({
   onCloseModal,
   onSaveModal,
   openFoodModal,
-  modalStateName
+  modalStateName,
 }) => {
   const [values, setValues] = useState({
     meal: "Breakfast",
     food: "",
     calories: 0,
-    date: new Date()
+    date: new Date(),
   });
   const handleEnter = () => {
     setValues({
@@ -42,21 +42,21 @@ const FoodModal = ({
       meal: "Breakfast",
       food: "",
       calories: 0,
-      date: new Date()
+      date: new Date(),
     });
   };
 
-  const onInputKeyUp = e => {
+  const onInputKeyUp = (e) => {
     if (e.key === "Enter") {
-      onSaveModal(values, modalStateName);
+      onSaveModal({ logEntrytype: "Food", values }, modalStateName);
     }
   };
 
-  const handleInputChange = e => {
+  const handleInputChange = (e) => {
     const { name, value } = e.target;
     setValues({ ...values, [name]: value });
   };
-  const handleDateTimeChange = d => {
+  const handleDateTimeChange = (d) => {
     setValues({ ...values, date: d });
   };
 
@@ -90,7 +90,7 @@ const FoodModal = ({
           onChange={handleInputChange}
           fullWidth
           inputProps={{
-            onKeyUp: e => onInputKeyUp(e)
+            onKeyUp: (e) => onInputKeyUp(e),
           }}
         />
         <ExpansionPanel>
@@ -121,7 +121,7 @@ const FoodModal = ({
                   endAdornment: (
                     <InputAdornment position="end">Cal</InputAdornment>
                   ),
-                  onKeyUp: e => onInputKeyUp(e)
+                  onKeyUp: (e) => onInputKeyUp(e),
                 }}
                 fullWidth
               />
@@ -134,7 +134,9 @@ const FoodModal = ({
           Cancel
         </Button>
         <Button
-          onClick={() => onSaveModal(values, modalStateName)}
+          onClick={() =>
+            onSaveModal({ logEntrytype: "Food", values }, modalStateName)
+          }
           color="primary">
           Save
         </Button>
@@ -146,7 +148,7 @@ FoodModal.propTypes = {
   onCloseModal: PropTypes.func.isRequired,
   onSaveModal: PropTypes.func.isRequired,
   openFoodModal: PropTypes.bool.isRequired,
-  modalStateName: PropTypes.string.isRequired
+  modalStateName: PropTypes.string.isRequired,
 };
 
 export default FoodModal;

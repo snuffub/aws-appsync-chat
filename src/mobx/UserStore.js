@@ -3,7 +3,7 @@ import {
   getUserAndConversations as GetUserAndConversations,
   createUser,
   createConvo,
-  createConvoLink
+  createConvoLink,
 } from "../graphql";
 
 import { observable, decorate } from "mobx";
@@ -36,7 +36,6 @@ class User {
       if (!getUser) {
         this.createUser();
       } else {
-        console.log("me:", getUser);
         this.myActivityId = getUser.conversations.items[0].conversation.id;
       }
     } catch (err) {
@@ -63,8 +62,8 @@ class User {
       );
       const {
         data: {
-          createConvo: { id: convoLinkConversationId }
-        }
+          createConvo: { id: convoLinkConversationId },
+        },
       } = conversation;
       const relation = { convoLinkUserId: username, convoLinkConversationId };
       await API.graphql(graphqlOperation(createConvoLink, relation));
@@ -78,7 +77,7 @@ class User {
 decorate(User, {
   username: observable,
   email: observable,
-  myActivityId: observable
+  myActivityId: observable,
 });
 
 export default new User();

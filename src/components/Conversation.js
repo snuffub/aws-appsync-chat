@@ -6,6 +6,8 @@ import { observer } from "mobx-react";
 import { css } from "glamor";
 import uuid from "uuid/v4";
 
+import { LogItemFood, LogItemHealth, LogItemExercise } from "./LogItems.js";
+
 import UserStore from "../mobx/UserStore";
 import {
   getConvo,
@@ -47,7 +49,6 @@ class Conversation extends React.Component {
 
   render() {
     const { conversationName } = this.props.match.params;
-    const { username } = UserStore;
     let { messages } = this.props;
     messages = messages.sort((a, b) => b.createdAt - a.createdAt);
 
@@ -59,19 +60,16 @@ class Conversation extends React.Component {
         <div {...css(styles.messagesContainer)}>
           {messages.map((m, i) => {
             return (
-              <div
-                key={i}
-                {...css([
-                  styles.message,
-                  checkSenderForMessageStyle(username, m),
-                ])}>
-                <p
-                  {...css([
-                    styles.messageText,
-                    checkSenderForTextStyle(username, m),
-                  ])}>
-                  {m.content}
-                </p>
+              <div key={i}>
+                {JSON.parse(m.content).logEntrytype === "Food" && (
+                  <LogItemFood content={JSON.parse(m.content)} />
+                )}
+                {JSON.parse(m.content).logEntrytype === "Exercise" && (
+                  <LogItemExercise content={JSON.parse(m.content)} />
+                )}
+                {JSON.parse(m.content).logEntrytype === "Health" && (
+                  <LogItemHealth content={JSON.parse(m.content)} />
+                )}
               </div>
             );
           })}
@@ -79,25 +77,6 @@ class Conversation extends React.Component {
         </div>
       </div>
     );
-  }
-}
-
-function checkSenderForMessageStyle(username, message) {
-  if (username === message.authorId) {
-    return {
-      backgroundColor: "#1b86ff",
-      marginLeft: 50,
-    };
-  } else {
-    return { marginRight: 50 };
-  }
-}
-
-function checkSenderForTextStyle(username, message) {
-  if (username === message.authorId) {
-    return {
-      color: "white",
-    };
   }
 }
 

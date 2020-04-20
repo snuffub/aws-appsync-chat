@@ -6,7 +6,7 @@ import {
   DialogActions,
   DialogContent,
   DialogContentText,
-  DialogTitle
+  DialogTitle,
 } from "@material-ui/core";
 
 import TextField from "@material-ui/core/TextField";
@@ -28,14 +28,14 @@ const ExerciseModal = ({
   onCloseModal,
   onSaveModal,
   openExerciseModal,
-  modalStateName
+  modalStateName,
 }) => {
   const [values, setValues] = useState({
     activity: "run",
     distance: 0,
     date: new Date(),
     duration: 0,
-    calories: 0
+    calories: 0,
   });
   const handleEnter = () => {
     setValues({
@@ -44,20 +44,20 @@ const ExerciseModal = ({
       distance: 0,
       date: new Date(),
       duration: 0,
-      calories: 0
+      calories: 0,
     });
   };
 
-  const onInputKeyUp = e => {
+  const onInputKeyUp = (e) => {
     if (e.key === "Enter") {
-      onSaveModal(values, modalStateName);
+      onSaveModal({ logEntrytype: "Exercise", values }, modalStateName);
     }
   };
-  const handleInputChange = e => {
+  const handleInputChange = (e) => {
     const { name, value } = e.target;
     setValues({ ...values, [name]: value });
   };
-  const handleDateTimeChange = d => {
+  const handleDateTimeChange = (d) => {
     setValues({ ...values, date: d });
   };
 
@@ -95,7 +95,7 @@ const ExerciseModal = ({
               endAdornment: (
                 <InputAdornment position="end">Miles</InputAdornment>
               ),
-              onKeyUp: e => onInputKeyUp(e)
+              onKeyUp: (e) => onInputKeyUp(e),
             }}
             fullWidth
           />
@@ -109,7 +109,7 @@ const ExerciseModal = ({
           onChange={handleInputChange}
           InputProps={{
             endAdornment: <InputAdornment position="end">Min</InputAdornment>,
-            onKeyUp: e => onInputKeyUp(e)
+            onKeyUp: (e) => onInputKeyUp(e),
           }}
           fullWidth
         />
@@ -142,7 +142,7 @@ const ExerciseModal = ({
                   endAdornment: (
                     <InputAdornment position="end">Cal</InputAdornment>
                   ),
-                  onKeyUp: e => onInputKeyUp(e)
+                  onKeyUp: (e) => onInputKeyUp(e),
                 }}
                 fullWidth
               />
@@ -155,7 +155,9 @@ const ExerciseModal = ({
           Cancel
         </Button>
         <Button
-          onClick={() => onSaveModal(values, modalStateName)}
+          onClick={() =>
+            onSaveModal({ logEntrytype: "Exercise", values }, modalStateName)
+          }
           color="primary">
           Save
         </Button>
@@ -167,7 +169,7 @@ ExerciseModal.propTypes = {
   onCloseModal: PropTypes.func.isRequired,
   onSaveModal: PropTypes.func.isRequired,
   openExerciseModal: PropTypes.bool.isRequired,
-  modalStateName: PropTypes.string.isRequired
+  modalStateName: PropTypes.string.isRequired,
 };
 
 export default ExerciseModal;

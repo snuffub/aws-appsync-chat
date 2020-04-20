@@ -16,6 +16,7 @@ import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import ExerciseModal from "./AddExerciseDialog.js";
 import FoodModal from "./AddFoodDialog.js";
 import HealthModal from "./AddHealthDialog.js";
+import { LogItemFood, LogItemHealth, LogItemExercise } from "./LogItems.js";
 
 import {
   SwipeableList,
@@ -48,6 +49,7 @@ class MyLog extends React.Component {
     this.setState({ [modalStateName]: false });
   };
   handleSaveModal = (values, modalStateName) => {
+    console.log("save:", values);
     this.handleCloseModal(modalStateName);
     this.createMessage(values);
   };
@@ -73,7 +75,6 @@ class MyLog extends React.Component {
   };
 
   deleteMessage = (id) => {
-    console.log("attempting to Delete: ", id);
     const input = {
       input: {
         id: id,
@@ -134,7 +135,15 @@ class MyLog extends React.Component {
                     ),
                     action: () => this.deleteMessage(m.id),
                   }}>
-                  <div {...css(styles.message)}>{m.content}</div>
+                  {JSON.parse(m.content).logEntrytype === "Food" && (
+                    <LogItemFood content={JSON.parse(m.content)} />
+                  )}
+                  {JSON.parse(m.content).logEntrytype === "Exercise" && (
+                    <LogItemExercise content={JSON.parse(m.content)} />
+                  )}
+                  {JSON.parse(m.content).logEntrytype === "Health" && (
+                    <LogItemHealth content={JSON.parse(m.content)} />
+                  )}
                 </SwipeableListItem>
               );
             })}
@@ -253,7 +262,6 @@ const MyLogWithData = flowright(
                 },
               }
             ) => {
-              console.log("create notified Sub");
               let messageArray = prev.getConvo.messages.items.filter(
                 (message) => message.id !== onCreateMessage.id
               );

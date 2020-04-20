@@ -6,7 +6,7 @@ import {
   DialogActions,
   DialogContent,
   DialogContentText,
-  DialogTitle
+  DialogTitle,
 } from "@material-ui/core";
 
 import TextField from "@material-ui/core/TextField";
@@ -28,7 +28,7 @@ const HealthModal = ({
   onCloseModal,
   onSaveModal,
   openHealthModal,
-  modalStateName
+  modalStateName,
 }) => {
   const [values, setValues] = useState({
     healthInfo: "weight",
@@ -38,7 +38,7 @@ const HealthModal = ({
     temp: 98.6,
     bmi: 0,
     pulse: 0,
-    date: new Date()
+    date: new Date(),
   });
 
   const handleEnter = () => {
@@ -51,20 +51,20 @@ const HealthModal = ({
       temp: 98.6,
       bmi: 0,
       pulse: 0,
-      date: new Date()
+      date: new Date(),
     });
   };
 
-  const onInputKeyUp = e => {
+  const onInputKeyUp = (e) => {
     if (e.key === "Enter") {
-      onSaveModal(values, modalStateName);
+      onSaveModal({ logEntrytype: "Health", values }, modalStateName);
     }
   };
-  const handleInputChange = e => {
+  const handleInputChange = (e) => {
     const { name, value } = e.target;
     setValues({ ...values, [name]: value });
   };
-  const handleDateTimeChange = d => {
+  const handleDateTimeChange = (d) => {
     setValues({ ...values, date: d });
   };
 
@@ -101,7 +101,7 @@ const HealthModal = ({
             onChange={handleInputChange}
             InputProps={{
               endAdornment: <InputAdornment position="end">Lbs</InputAdornment>,
-              onKeyUp: e => onInputKeyUp(e)
+              onKeyUp: (e) => onInputKeyUp(e),
             }}
             fullWidth
           />
@@ -118,7 +118,7 @@ const HealthModal = ({
               onChange={handleInputChange}
               fullWidth
               inputProps={{
-                onKeyUp: e => onInputKeyUp(e)
+                onKeyUp: (e) => onInputKeyUp(e),
               }}
             />
             <TextField
@@ -130,7 +130,7 @@ const HealthModal = ({
               onChange={handleInputChange}
               fullWidth
               inputProps={{
-                onKeyUp: e => onInputKeyUp(e)
+                onKeyUp: (e) => onInputKeyUp(e),
               }}
             />
           </div>
@@ -146,7 +146,7 @@ const HealthModal = ({
             onChange={handleInputChange}
             fullWidth
             inputProps={{
-              onKeyUp: e => onInputKeyUp(e)
+              onKeyUp: (e) => onInputKeyUp(e),
             }}
           />
         )}
@@ -161,7 +161,7 @@ const HealthModal = ({
             onChange={handleInputChange}
             fullWidth
             inputProps={{
-              onKeyUp: e => onInputKeyUp(e)
+              onKeyUp: (e) => onInputKeyUp(e),
             }}
           />
         )}{" "}
@@ -176,7 +176,7 @@ const HealthModal = ({
             onChange={handleInputChange}
             InputProps={{
               endAdornment: <InputAdornment position="end">F</InputAdornment>,
-              onKeyUp: e => onInputKeyUp(e)
+              onKeyUp: (e) => onInputKeyUp(e),
             }}
             fullWidth
           />
@@ -206,7 +206,9 @@ const HealthModal = ({
           Cancel
         </Button>
         <Button
-          onClick={() => onSaveModal(values, modalStateName)}
+          onClick={() =>
+            onSaveModal({ logEntrytype: "Health", values }, modalStateName)
+          }
           color="primary">
           Save
         </Button>
@@ -218,7 +220,7 @@ HealthModal.propTypes = {
   onCloseModal: PropTypes.func.isRequired,
   onSaveModal: PropTypes.func.isRequired,
   openExerciseModal: PropTypes.bool.isRequired,
-  modalStateName: PropTypes.string.isRequired
+  modalStateName: PropTypes.string.isRequired,
 };
 
 export default HealthModal;
