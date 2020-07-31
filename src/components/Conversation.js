@@ -51,7 +51,7 @@ class Conversation extends React.Component {
     const { conversationName } = this.props.match.params;
     let { messages } = this.props;
     messages = messages.sort((a, b) => b.createdAt - a.createdAt);
-
+    console.log(messages)
     return (
       <div>
         <div {...css(styles.conversationNameContainer)}>
@@ -61,7 +61,7 @@ class Conversation extends React.Component {
           {messages.map((m, i) => {
             return (
               <div key={i}>
-                {JSON.parse(m.content).logEntrytype === "Food" && (
+                {console.log(m.content) && JSON.parse(m.content).logEntrytype === "Food" && (
                   <LogItemFood content={JSON.parse(m.content)} />
                 )}
                 {JSON.parse(m.content).logEntrytype === "Exercise" && (

@@ -1,0 +1,20 @@
+{
+    "devy": {
+        "awscloudformation": {
+            "AuthRoleName": "amplify-chatt-devy-212406-authRole",
+            "UnauthRoleArn": "arn:aws:iam::982503353672:role/amplify-chatt-devy-212406-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::982503353672:role/amplify-chatt-devy-212406-authRole",
+            "Region": "us-east-1",
+            "DeploymentBucketName": "amplify-chatt-devy-212406-deployment",
+            "UnauthRoleName": "amplify-chatt-devy-212406-unauthRole",
+            "StackName": "amplify-chatt-devy-212406",
+            "StackId": "arn:aws:cloudformation:us-east-1:982503353672:stack/amplify-chatt-devy-212406/73652cc0-75f1-11ea-9cc7-12f4ed1177e6",
+            "AmplifyAppId": "d1lriur5k4z6vx"
+        },
+        "categories": {
+            "auth": {
+                "auth": {}
+            }
+        }
+    }
+}

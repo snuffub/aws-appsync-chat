@@ -1,7 +1,7 @@
 import React from "react";
 import { BrowserRouter } from "react-router-dom";
 import { Hub } from "aws-amplify";
-import { withAuthenticator } from "aws-amplify-react";
+import { withAuthenticator  } from '@aws-amplify/ui-react';
 
 import UserStore from "./mobx/UserStore";
 import Header from "./components/Header";
@@ -24,7 +24,9 @@ class Router extends React.Component {
     });
   }
   onAuthEvent(payload) {
-    this.props.onStateChange();
+    if(payload.event === "signOut"){
+      this.setState(() => ({view: "users"}))
+    }
   }
   toggleDisplay = view => {
     this.setState(() => ({

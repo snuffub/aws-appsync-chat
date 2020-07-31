@@ -5,6 +5,7 @@ type User {
   messages(filter: ModelMessageFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelMessageConnection
   createdAt: String
   updatedAt: String
+  subscribedUsers: [String!]
 }
 
 type Conversation {
@@ -136,6 +137,7 @@ input ModelUserFilterInput {
   username: ModelStringInput
   createdAt: ModelStringInput
   updatedAt: ModelStringInput
+  subscribedUsers: ModelStringInput
   and: [ModelUserFilterInput]
   or: [ModelUserFilterInput]
   not: ModelUserFilterInput
@@ -152,6 +154,7 @@ input CreateUserInput {
   username: String!
   createdAt: String
   updatedAt: String
+  subscribedUsers: [String!]
 }
 
 input UpdateUserInput {
@@ -159,6 +162,7 @@ input UpdateUserInput {
   username: String
   createdAt: String
   updatedAt: String
+  subscribedUsers: [String!]
 }
 
 input DeleteUserInput {
@@ -181,6 +185,7 @@ input ModelUserConditionInput {
   username: ModelStringInput
   createdAt: ModelStringInput
   updatedAt: ModelStringInput
+  subscribedUsers: ModelStringInput
   and: [ModelUserConditionInput]
   or: [ModelUserConditionInput]
   not: ModelUserConditionInput

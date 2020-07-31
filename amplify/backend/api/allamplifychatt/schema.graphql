@@ -16,6 +16,7 @@ type User
   messages: [Message] @connection(name: "UserMessages")
   createdAt: String
   updatedAt: String
+  subscribedUsers: [String!]
 }
 
 type Conversation
